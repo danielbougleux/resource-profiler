@@ -62,16 +62,6 @@ Create output directories before running a profiler or plotter; the scripts do n
 
 The command examples use Bash syntax (common on Linux and macOS).
 
-## Recommended workflow
-
-1. Choose process profiling or host profiling, then create a fresh output directory for the run.
-2. Start the matching profiler and select the metrics you need.
-3. Wait for the process to finish, or stop the host profiler as described below.
-4. Pass the profiler's output directory to its matching plotter. Select only categories for which CSV files were recorded.
-5. Open the generated PNG files in the plotter's output directory.
-
-For a process run, collection and plotting happen in sequence: the profiler exits when the workload finishes, and then you run the matching plotter. For host profiling, keep the profiler running while the activity you want to observe takes place, stop it, and then run its plotter.
-
 ## First experiment: measure a small program
 
 This repository includes small example programs in [`examples/`](examples/). They are target programs for the profiler: run one of them *through* the process profiler to collect its metrics.  See the [`examples/README.md`](examples/README.md) for complete commands and explanations of each sample workload.
@@ -89,8 +79,6 @@ python rprof/rprof.py \
   "python examples/memory_workload.py"
 ```
 
-The command string is split on spaces before it is launched; it is not run through a shell. Shell syntax such as pipes, redirects, variable expansion, and shell-specific quoting is not interpreted. Avoid arguments that contain spaces, since the current command parsing does not preserve quoted argument boundaries.
-
 Options:
 
 | Option | Description |
@@ -104,12 +92,6 @@ Options:
 | `command` | Required command to launch, enclosed in quotes. |
 
 The selected metrics are written to `cpu.csv`, `memory.csv`, and/or `disk.csv` in the output directory. Each file has a header row and semicolon-separated values, including a local timestamp for each sample.
-
-Process metric details:
-
-- **CPU (`cpu.csv`)**: collects CPU time counters, such as user and system time. These are cumulative seconds, not an instantaneous percentage.
-- **Memory (`memory.csv`)**: collects memory details from `psutil`'s full memory information. The process plotter's memory chart uses the proportional set size (`pss`) column and labels the result in MiB. PSS is not available on every operating system.
-- **Disk (`disk.csv`)**: collects disk I/O counters such as read/write counts and bytes. These are cumulative counters since process start, when supported by the operating system.
 
 With `--get-children`, the collector adds counters from child processes to the monitored process.
 
@@ -183,16 +165,6 @@ Options:
 | `-o`, `--output_dir DIR` | Write CSV files and `.mon` to this directory; default is the current directory. |
 
 The selected metrics are written to files named `cpu.csv`, `cpu_usage.csv`, `memory.csv`, `disk.csv`, and/or `network.csv`.
-
-Host metric details:
-
-- **CPU (`cpu.csv`)**: cumulative system CPU times. The available fields vary by platform; Linux can include an `iowait` counter.
-- **CPU usage (`cpu_usage.csv`)**: `psutil`'s per-logical-CPU usage percentages for each sample. This is separate from `cpu.csv` and is not currently used by the host plotter.
-- **Memory (`memory.csv`)**: system virtual-memory values, including used, cached, and inactive memory where provided by the platform. The plotter displays these selected fields in MiB.
-- **Disk (`disk.csv`)**: cumulative system disk read/write counts and byte counters, where supported.
-- **Network (`network.csv`)**: cumulative bytes sent and received by the host's network interfaces. These are host-wide totals, not limited to the profiled application.
-
-The metric files use semicolon-separated rows with timestamps. The per-core usage file stores the list of CPU percentages in a single field. As with other `psutil` metrics, the fields available depend on the operating system.
 
 ### 4. Host plotter
 
