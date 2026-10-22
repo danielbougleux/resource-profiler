@@ -1,6 +1,6 @@
 # resource-profiler
 
-`resource-profiler` is a small Python command-line toolkit for collecting process or host resource metrics to CSV files and generating PNG charts from those recordings.
+`resource-profiler` is a small Python command-line toolkit for collecting process or host machine resource metrics, storing them into CSV files and generating PNG charts from those recordings.
 
 ## What it does
 
@@ -46,27 +46,11 @@ python -m pip install --upgrade pip
 python -m pip install psutil matplotlib
 ```
 
-## Tools
-
-| Metric collection scripts | Functionality |
-| --- | --- |
-| [`rprof/rprof.py`](rprof/rprof.py) | Run a command and collect its process's metrics. |
-| [`rprof-host/rprof-host.py`](rprof-host/rprof-host.py) | Collect metrics for the whole host machine while it is running. |
-
-| Resource graph generation scripts | Functionality |
-| --- | --- |
-| [`rprof/rprof-plotter.py`](rprof/rprof-plotter.py) | Create charts from process metrics. |
-| [`rprof-host/rprof-plotter-host.py`](rprof-host/rprof-plotter-host.py) | Create charts from host metrics. |
-
-Create output directories before running a profiler or plotter; the scripts do not create them automatically. Run commands from the repository root, or use the appropriate path to the script.
-
-The command examples use Bash syntax (common on Linux and macOS).
-
 ## First experiment: measure a small program
 
 This repository includes small example programs in [`examples/`](examples/). They are target programs for the profiler: run one of them *through* the process profiler to collect its metrics.  See the [`examples/README.md`](examples/README.md) for complete commands and explanations of each sample workload.
 
-### 1. Process profiler
+### Process profiler
 
 The process profiler, `rprof`, launches the command you provide and monitors it until it exits. Pass the complete command as one quoted argument:
 
@@ -95,7 +79,7 @@ The selected metrics are written to `cpu.csv`, `memory.csv`, and/or `disk.csv` i
 
 With `--get-children`, the collector adds counters from child processes to the monitored process.
 
-### 2. Process plotter
+### Process plotter
 
 Plot graphs that show the recorded metrics over the run. Select the same categories you collected with the process profiler. The input directory must be the directory containing those CSV files:
 
@@ -126,7 +110,9 @@ The elapsed-time window is measured in seconds from the first sample, not as a w
 - Disk: `DiskReadOps.png`, `DiskReadMiB.png`, `DiskWriteOps.png`, `DiskWriteMiB.png`
 - CPU: `iowait.png`, `cpuusage.png`
 
-### 3. Host profiler
+--------------------------------------------------------------------------------------------------------------------------------
+
+### Host profiler
 
 The host profiler samples system-wide metrics until you request it to stop. Unlike the process profiler, it does not start or stop a workload for you. It checks its stop file after every 10 samples, so it may take up to about 10 sampling intervals to exit after you send the stop signal. For example, with `--interval 1.5`, allow up to roughly 15 seconds for shutdown.
 

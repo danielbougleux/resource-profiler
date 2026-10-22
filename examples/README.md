@@ -1,10 +1,10 @@
 # Example workloads
 
-These small Python programs are **workloads**: programs that you can run as targets of `rprof` or use to create activity while the host profiler is running. They are teaching examples, not performance benchmarks. They use only Python's standard library and do not need extra packages.
+These small Python programs are **workloads**: programs that you can run as targets of `rprof` or use to create activity while the host profiler is running. They use only Python's standard library and do not need extra packages.
 
 Run commands from the repository root (the folder containing `README.md`). The examples finish on their own and are intentionally bounded: the CPU and memory examples run for about 8 seconds, and the disk example writes a temporary 16 MiB file and then removes it.
 
-The commands below use Bash-style directory creation and `python3`, and work in a Linux/macOS terminal. If your Windows installation uses `python` as its Python 3 command, replace `python3` with `python`.
+The commands below use Bash-style directory creation and `python3`, and work in a Linux/macOS terminal.
 
 ## Choose an example
 
